@@ -301,7 +301,7 @@ async function login() {
     await signInWithEmailAndPassword(auth, email, password);
   } catch (error) {
     console.error(error);
-    setLoginMessage("warn", "فشل تسجيل الدخول. تأكد من البريد والباسورد.");
+    setLoginMessage("warn", `Login error: ${error.code}`);
   }
 }
 async function logout() {
