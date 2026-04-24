@@ -1,9 +1,9 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-import { getFirestore, collection, doc, getDocs, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+import { getFirestore, collection, doc, getDocs, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDFcf21kHFt6UiP_PR8PzM2Yr16AvjWzTk",
+  apiKey: "AIzaSyDFcf21kHFt6UiP_PR8PzM2Yr16AvjwzTk",
   authDomain: "cstore-delivery.firebaseapp.com",
   projectId: "cstore-delivery",
   storageBucket: "cstore-delivery.firebasestorage.app",
@@ -24,6 +24,8 @@ let extractedCustomerCoords = null;
 let currentRole = null;
 let branches = [];
 let pricing = { ...DEFAULT_PRICING };
+let unsubscribeBranches = null;
+let unsubscribePricing = null;
 
 const $ = (id) => document.getElementById(id);
 
@@ -138,6 +140,38 @@ function applyRoleUI() {
   renderBranches();
   renderAdminForm();
 }
+
+function setupLiveListeners() {
+  if (unsubscribeBranches) unsubscribeBranches();
+  if (unsubscribePricing) unsubscribePricing();
+
+  unsubscribeBranches = onSnapshot(collection(db, "branches"), (snapshot) => {
+    branches = snapshot.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }))
+      .sort((a, b) => a.id.localeCompare(b.id));
+    if (currentRole) applyRoleUI();
+  }, (error) => {
+    console.error("branches listener error", error);
+  });
+
+  unsubscribePricing = onSnapshot(doc(db, "pricing", "main"), (docSnap) => {
+    pricing = docSnap.exists() ? { ...DEFAULT_PRICING, ...docSnap.data() } : { ...DEFAULT_PRICING };
+    if (currentRole) applyRoleUI();
+  }, (error) => {
+    console.error("pricing listener error", error);
+  });
+}
+
+function stopLiveListeners() {
+  if (unsubscribeBranches) {
+    unsubscribeBranches();
+    unsubscribeBranches = null;
+  }
+  if (unsubscribePricing) {
+    unsubscribePricing();
+    unsubscribePricing = null;
+  }
+}
+
 async function loadBranchesFromFirestore() {
   const snapshot = await getDocs(collection(db, "branches"));
   branches = snapshot.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() })).sort((a, b) => a.id.localeCompare(b.id));
@@ -165,7 +199,7 @@ async function saveAdminSettings() {
     }
     await setDoc(doc(db, "pricing", "main"), pricing);
     await reloadDataFromFirebase();
-    setMessage("ok", "تم حفظ تعديلات الفروع والتسعير على Firebase بنجاح.");
+    setMessage("ok", "تم حفظ تعديلات الفروع والتسعير على Firebase بنجاح، وسيتم تحديث الفيو تلقائيًا.");
   } catch (error) {
     console.error(error);
     setMessage("warn", "حدث خطأ أثناء حفظ البيانات على Firebase.");
@@ -301,7 +335,7 @@ async function login() {
     await signInWithEmailAndPassword(auth, email, password);
   } catch (error) {
     console.error(error);
-    setLoginMessage("warn", `Login error: ${error.code}`);
+    setLoginMessage("warn", "فشل تسجيل الدخول. تأكد من البريد والباسورد.");
   }
 }
 async function logout() {
@@ -324,6 +358,7 @@ function bindEvents() {
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     currentRole = null;
+    stopLiveListeners();
     $("loginOverlay").classList.remove("hidden");
     $("emailInput").value = "";
     $("passwordInput").value = "";
@@ -337,6 +372,7 @@ onAuthStateChanged(auth, async (user) => {
   currentRole = email === ADMIN_EMAIL ? "admin" : "view";
   try {
     await reloadDataFromFirebase();
+    setupLiveListeners();
     $("loginOverlay").classList.add("hidden");
     setLoginMessage("ok", "تم تسجيل الدخول بنجاح.");
   } catch (error) {
