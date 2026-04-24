@@ -14,8 +14,8 @@ const DEFAULT_PRICING = {
   tier3_rate: 8
 };
 const DEFAULT_USERS = {
-  admin: "admin123",
-  view: "view123"
+  admin: "MahmoudOsman11",
+  view: "123"
 };
 
 let extractedCustomerCoords = null;
