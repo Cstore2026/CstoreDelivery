@@ -14,8 +14,8 @@ const DEFAULT_PRICING = {
   tier3_rate: 8
 };
 const DEFAULT_USERS = {
-  admin: "MahmoudOsman11",
-  view: "123"
+  admin: "admin123",
+  view: "view123"
 };
 
 let extractedCustomerCoords = null;
@@ -514,6 +514,17 @@ async function calculateRoadDistance() {
     console.error(error);
     setMessage("warn", "حدث خطأ أثناء الحساب. تأكد من اتصال الإنترنت.");
   }
+}
+
+
+function resetPasswordCache() {
+  localStorage.removeItem("cstore-users");
+  localStorage.removeItem("cstore-current-role");
+  users = structuredClone(DEFAULT_USERS);
+  document.getElementById("passwordInput").value = "";
+  const msg = document.getElementById("loginMessage");
+  msg.className = "alert info";
+  msg.textContent = "تم مسح بيانات الباسورد المحفوظة. اعمل Refresh أو سجّل بالباسوردات الموجودة في app.js الآن.";
 }
 
 initializeTheme();
