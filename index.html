@@ -15,14 +15,11 @@
     <div class="login-box">
       <img class="login-logo" src="logo.jpg" alt="C Store Logo">
       <h2 class="login-title">تسجيل الدخول</h2>
-      <p class="small login-subtitle">اختر نوع المستخدم ثم ادخل الباسورد</p>
+      <p class="small login-subtitle">سجل الدخول بحساب Firebase الذي أنشأته داخل المشروع.</p>
 
       <div class="field">
-        <label>نوع المستخدم</label>
-        <select id="roleSelect" class="input-select">
-          <option value="view">View</option>
-          <option value="admin">Admin</option>
-        </select>
+        <label>البريد الإلكتروني</label>
+        <input id="emailInput" type="email" placeholder="admin@cstore.com أو view@cstore.com">
       </div>
 
       <div class="field">
@@ -31,11 +28,10 @@
       </div>
 
       <div class="btn-row">
-        <button class="btn primary" onclick="login()">دخول</button>
-        <button class="btn secondary" onclick="resetPasswordCache()">Reset Password Cache</button>
+        <button class="btn primary" id="loginButton">دخول</button>
       </div>
 
-      <div id="loginMessage" class="alert warn">نسخة محلية. الحماية هنا بسيطة ومناسبة للاستخدام الداخلي فقط.</div>
+      <div id="loginMessage" class="alert warn">استخدم الحسابات التي أنشأتها داخل Firebase Authentication.</div>
     </div>
   </div>
 
@@ -50,15 +46,15 @@
 
       <div class="header-actions">
         <div id="userRoleBadge" class="pill">غير مسجل</div>
-        <div class="pill">5 / 5 فروع</div>
-        <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
-        <button class="btn secondary" onclick="logout()">تسجيل خروج</button>
+        <div id="branchesCountBadge" class="pill">0 / 0 فروع</div>
+        <button id="themeToggle" class="theme-toggle" type="button">🌙 Dark Mode</button>
+        <button class="btn secondary" id="logoutButton" type="button">تسجيل خروج</button>
       </div>
     </div>
 
     <div id="adminPanel" class="card admin-panel">
       <h2>لوحة تحكم الأدمن</h2>
-      <div class="subtle-note">من هنا تقدر تعدل إحداثيات الفروع ونظام التسعير وكلمات المرور. التعديلات تتخزن على نفس الجهاز والمتصفح فقط.</div>
+      <div class="subtle-note">من هنا تقدر تعدل إحداثيات الفروع ونظام التسعير. التغييرات تتحفظ على Firebase وتظهر عند كل الناس.</div>
 
       <div class="admin-form-list" id="adminBranchesForm"></div>
 
@@ -89,27 +85,14 @@
             <input id="price_tier3_rate" type="number" step="0.1">
           </div>
         </div>
-      </div>
 
-      <div class="admin-item section-space">
-        <div class="admin-head">
-          <strong>إدارة كلمات المرور</strong>
-          <span class="status">Admin</span>
+        <div class="small">
+          تغيير باسوردات المستخدمين يتم من Firebase Authentication Console، وليس من داخل الموقع.
         </div>
-        <div class="admin-grid">
-          <div class="field">
-            <label>باسورد الأدمن</label>
-            <input id="user_admin_password" type="text">
-          </div>
-          <div class="field">
-            <label>باسورد الفيو</label>
-            <input id="user_view_password" type="text">
-          </div>
-        </div>
-        <div class="small">يمكنك من هنا تغيير كلمات المرور الخاصة بـ Admin و View ثم حفظ التعديلات.</div>
+
         <div class="btn-row">
-          <button class="btn primary" onclick="saveAdminSettings()">حفظ التعديلات</button>
-          <button class="btn secondary" onclick="resetAdminSettings()">استرجاع الافتراضي</button>
+          <button class="btn primary" id="saveAdminButton" type="button">حفظ التعديلات</button>
+          <button class="btn secondary" id="reloadDataButton" type="button">إعادة تحميل البيانات</button>
         </div>
       </div>
     </div>
@@ -128,10 +111,10 @@
           <input id="customerLocation" placeholder="مثال: 30.04822252,31.39434674 أو رابط Google Maps كامل" />
 
           <div class="btn-row">
-            <button class="btn secondary" onclick="convertCustomerLink()">تحويل الرابط إلى إحداثيات</button>
-            <button class="btn secondary" onclick="useExtractedCoordinates()">استخدام الإحداثيات المستخرجة</button>
-            <button class="btn secondary" onclick="useExampleCoordinates()">تجربة مثال جاهز</button>
-            <button class="btn primary" onclick="calculateRoadDistance()">احسب مسافة الطريق</button>
+            <button class="btn secondary" id="convertButton" type="button">تحويل الرابط إلى إحداثيات</button>
+            <button class="btn secondary" id="useExtractedButton" type="button">استخدام الإحداثيات المستخرجة</button>
+            <button class="btn secondary" id="useExampleButton" type="button">تجربة مثال جاهز</button>
+            <button class="btn primary" id="calculateButton" type="button">احسب مسافة الطريق</button>
           </div>
 
           <div id="messageBox" class="alert warn">ضع لوكيشن العميل، وبعدها اضغط "احسب مسافة الطريق".</div>
@@ -160,6 +143,6 @@
     </div>
   </div>
 
-  <script src="app.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>

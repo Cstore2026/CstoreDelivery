@@ -1,4 +1,4 @@
-# C STORE Delivery Dashboard
+# C STORE Delivery Dashboard - Firebase Version
 
 ## الملفات
 - index.html
@@ -6,22 +6,21 @@
 - app.js
 - logo.jpg
 
-## طريقة الرفع أونلاين
-ارفع الملفات الأربعة كما هي إلى أي استضافة ثابتة مثل:
-- Netlify
-- Vercel
-- GitHub Pages
-- cPanel / public_html
+## ماذا تغير؟
+هذه النسخة مربوطة بـ Firebase بدل localStorage.
+- تسجيل الدخول: Firebase Authentication
+- الفروع: Cloud Firestore collection = branches
+- التسعير: Cloud Firestore collection = pricing / main
+
+## حسابات الدخول
+- Admin: admin@cstore.com
+- View: view@cstore.com
 
 ## مهم
-المفتاح موجود داخل ملف app.js.
-أي شخص يصل للملفات يمكنه رؤية المفتاح، لذلك هذه النسخة مناسبة للاستخدام الداخلي أو كبداية فقط.
+تغيير كلمات المرور يتم من Firebase Authentication Console، وليس من داخل الموقع.
 
-## بيانات الدخول الافتراضية
-- Admin: admin123
-- View: view123
+## الرفع
+ارفع الملفات الأربعة كما هي إلى Vercel أو GitHub Pages أو أي استضافة ثابتة.
 
-## ملاحظات
-- التعديلات والحفظ يتمان داخل المتصفح باستخدام localStorage
-- لو استخدمت أكثر من جهاز، كل جهاز سيحتفظ بإعداداته الخاصة
-- للحماية الحقيقية ومشاركة نفس البيانات بين الأجهزة، تحتاج نسخة Backend
+## ملاحظة
+مفتاح Firebase ومفتاح ORS موجودان داخل app.js، لذلك النسخة مناسبة للاستخدام الداخلي أو كبداية.
