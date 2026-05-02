@@ -3,7 +3,7 @@ import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from
 import { getFirestore, collection, doc, getDocs, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDFcf21kHFt6UiP_PR8PzM2Yr16AvjwzTk",
+  apiKey: "AIzaSyDFcf21kHFt6UiP_PR8PzM2Yr16AvjWzTk",
   authDomain: "cstore-delivery.firebaseapp.com",
   projectId: "cstore-delivery",
   storageBucket: "cstore-delivery.firebasestorage.app",
