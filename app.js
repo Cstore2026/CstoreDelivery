@@ -335,7 +335,8 @@ async function login() {
     await signInWithEmailAndPassword(auth, email, password);
   } catch (error) {
     console.error(error);
-   setLoginMessage("warn", `Login error: ${error.code}`);
+  setLoginMessage("warn", `Login error: ${error.code}`);
+console.error("Firebase login error:", error);
   }
 }
 async function logout() {
