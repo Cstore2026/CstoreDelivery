@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>C STORE Delivery Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page-watermark">
+    <img src="logo.jpg" alt="C Store watermark">
+  </div>
+
+  <div id="loginOverlay" class="login-overlay">
+    <div class="login-box">
+      <img class="login-logo" src="logo.jpg" alt="C Store Logo">
+      <h2 class="login-title">تسجيل الدخول</h2>
+      <p class="small login-subtitle">سجل الدخول بحساب Firebase الذي أنشأته داخل المشروع.</p>
+
+      <div class="field">
+        <label>البريد الإلكتروني</label>
+        <input id="emailInput" type="email" placeholder="admin@cstore.com أو view@cstore.com">
+      </div>
+
+      <div class="field">
+        <label>الباسورد</label>
+        <input id="passwordInput" type="password" placeholder="اكتب الباسورد">
+      </div>
+
+      <div class="btn-row">
+        <button class="btn primary" id="loginButton">دخول</button>
+      </div>
+
+      <div id="loginMessage" class="alert warn">استخدم الحسابات التي أنشأتها داخل Firebase Authentication.</div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="header">
+      <div class="brand-wrap">
+        <img class="brand-logo" src="logo.jpg" alt="C Store Delivery Logo">
+        <div class="title-block">
+          <h1>لوحة إدارة خدمات التوصيل</h1>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div id="userRoleBadge" class="pill">غير مسجل</div>
+        <div id="branchesCountBadge" class="pill">0 / 0 فروع</div>
+        <button id="themeToggle" class="theme-toggle" type="button">🌙 Dark Mode</button>
+        <button class="btn secondary" id="logoutButton" type="button">تسجيل خروج</button>
+      </div>
+    </div>
+
+    <div id="adminPanel" class="card admin-panel">
+      <h2>لوحة تحكم الأدمن</h2>
+      <div class="subtle-note">من هنا تقدر تعدل إحداثيات الفروع ونظام التسعير. التغييرات تتحفظ على Firebase وتظهر عند كل الناس.</div>
+
+      <div class="admin-form-list" id="adminBranchesForm"></div>
+
+      <div class="admin-item section-space">
+        <div class="admin-head">
+          <strong>إعدادات التسعير</strong>
+          <span class="status">Admin</span>
+        </div>
+        <div class="admin-grid">
+          <div class="field">
+            <label>سعر ثابت حتى (كم)</label>
+            <input id="price_tier1_km" type="number" step="0.1">
+          </div>
+          <div class="field">
+            <label>السعر الثابت</label>
+            <input id="price_tier1_cost" type="number" step="0.1">
+          </div>
+          <div class="field">
+            <label>حتى (كم) للشريحة الثانية</label>
+            <input id="price_tier2_km" type="number" step="0.1">
+          </div>
+          <div class="field">
+            <label>سعر الكيلو من بعد الشريحة الأولى</label>
+            <input id="price_tier2_rate" type="number" step="0.1">
+          </div>
+          <div class="field">
+            <label>سعر الكيلو بعد الشريحة الثانية</label>
+            <input id="price_tier3_rate" type="number" step="0.1">
+          </div>
+        </div>
+
+        <div class="small">
+          تغيير باسوردات المستخدمين يتم من Firebase Authentication Console، وليس من داخل الموقع.
+        </div>
+
+        <div class="btn-row">
+          <button class="btn primary" id="saveAdminButton" type="button">حفظ التعديلات</button>
+          <button class="btn secondary" id="reloadDataButton" type="button">إعادة تحميل البيانات</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="mainGrid" class="grid">
+      <div id="branchesCard" class="card">
+        <h2 id="branchesTitle">الفروع</h2>
+        <div id="branchesNote" class="subtle-note">الفروع ثابتة.</div>
+        <div id="branchesContainer" class="branches"></div>
+      </div>
+
+      <div class="right-grid">
+        <div class="card full">
+          <h2>لوكيشن العميل</h2>
+          <label class="main-label" for="customerLocation">الصق رابط العميل أو الإحداثيات</label>
+          <input id="customerLocation" placeholder="مثال: 30.04822252,31.39434674 أو رابط Google Maps كامل" />
+
+          <div class="btn-row">
+            <button class="btn secondary" id="convertButton" type="button">تحويل الرابط إلى إحداثيات</button>
+            <button class="btn secondary" id="useExtractedButton" type="button">استخدام الإحداثيات المستخرجة</button>
+            <button class="btn secondary" id="useExampleButton" type="button">تجربة مثال جاهز</button>
+            <button class="btn primary" id="calculateButton" type="button">احسب مسافة الطريق</button>
+          </div>
+
+          <div id="messageBox" class="alert warn">ضع لوكيشن العميل، وبعدها اضغط "احسب مسافة الطريق".</div>
+
+          <div id="extractedCoordsBox" class="result-box hidden mt-12">
+            <div class="muted">الإحداثيات المستخرجة</div>
+            <div id="extractedCoordsText" class="big coords-big"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>المسافة</h2>
+          <div id="distanceContent" class="muted">بعد الحساب سيظهر أقرب فرع ومسافة الطريق الفعلية.</div>
+        </div>
+
+        <div class="card">
+          <h2>تكلفة التوصيل</h2>
+          <div id="costContent" class="muted">بعد الحساب ستظهر تكلفة التوصيل حسب مسافة الطريق.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>تفاصيل كل الفروع</h2>
+      <div id="allBranchesResults" class="muted">ستظهر مقارنة مسافات الطريق لكل الفروع هنا بعد الحساب.</div>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

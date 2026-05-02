@@ -3,7 +3,7 @@ import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from
 import { getFirestore, collection, doc, getDocs, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 const firebaseConfig = {
- apiKey: "AIzaSyDFcf21kHFt6UiP_PR8PzM2Yr16AvjWzTk",
+  apiKey: "AIzaSyDFcf21kHFt6UiP_PR8PzM2Yr16AvjwzTk",
   authDomain: "cstore-delivery.firebaseapp.com",
   projectId: "cstore-delivery",
   storageBucket: "cstore-delivery.firebasestorage.app",
@@ -335,8 +335,7 @@ async function login() {
     await signInWithEmailAndPassword(auth, email, password);
   } catch (error) {
     console.error(error);
-    setLoginMessage("warn", `Login error: ${error.code}`);
-console.error("Firebase login error:", error);
+    setLoginMessage("warn", "فشل تسجيل الدخول. تأكد من البريد والباسورد.");
   }
 }
 async function logout() {
