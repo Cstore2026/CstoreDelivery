@@ -280,17 +280,61 @@ function useExampleCoordinates() {
   setMessage("info", "تم وضع مثال جاهز للتجربة. اضغط الآن على زر حساب مسافة الطريق.");
 }
 async function routeForBranch(customer, branch) {
-  const url = "https://api.openrouteservice.org/v2/directions/driving-car";
-  const payload = { coordinates: [[branch.lng, branch.lat], [customer.lng, customer.lat]] };
   try {
-    const res = await fetch(url, { method: "POST", headers: { "Authorization": ORS_API_KEY, "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-    if (!res.ok) throw new Error(await res.text() || `HTTP ${res.status}`);
-    const data = await res.json();
-    const summary = data?.routes?.[0]?.summary;
-    if (!summary) throw new Error("No summary returned");
-    return { ...branch, distanceMeters: summary.distance, durationSeconds: summary.duration };
+    const response = await fetch(
+      "https://routes.googleapis.com/directions/v2:computeRoutes",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Goog-Api-Key": GOOGLE_MAPS_API_KEY,
+          "X-Goog-FieldMask": "routes.distanceMeters,routes.duration"
+        },
+        body: JSON.stringify({
+          origin: {
+            location: {
+              latLng: {
+                latitude: branch.lat,
+                longitude: branch.lng
+              }
+            }
+          },
+          destination: {
+            location: {
+              latLng: {
+                latitude: customer.lat,
+                longitude: customer.lng
+              }
+            }
+          },
+          travelMode: "DRIVE"
+        })
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(await response.text());
+    }
+
+    const data = await response.json();
+
+    if (!data.routes || !data.routes.length) {
+      throw new Error("No route returned");
+    }
+
+    return {
+      ...branch,
+      distanceMeters: data.routes[0].distanceMeters,
+      durationSeconds: parseInt(data.routes[0].duration.replace("s", ""))
+    };
+
   } catch (error) {
-    return { ...branch, distanceMeters: null, durationSeconds: null, error: String(error) };
+    return {
+      ...branch,
+      distanceMeters: null,
+      durationSeconds: null,
+      error: String(error)
+    };
   }
 }
 async function calculateRoadDistance() {
