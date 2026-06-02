@@ -11,7 +11,7 @@ const firebaseConfig = {
   appId: "1:208559702059:web:8c0767185369f2a420ea6e"
 };
 
-const ORS_API_KEY = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6Ijk2NGNjYTQzYTIxMjQ5MWY4ZjEyZDdjYjUwZDc4MDZhIiwiaCI6Im11cm11cjY0In0=";
+const GOOGLE_MAPS_API_KEY = "AIzaSyA4UyTSWWEOGhbwrmeh8pm1JQce5m7PeLg";
 const ADMIN_EMAIL = "admin@cstore.com";
 const VIEW_EMAIL = "view@cstore.com";
 const DEFAULT_PRICING = { tier1_km: 5, tier1_cost: 35, tier2_km: 10, tier2_rate: 7, tier3_rate: 8 };
