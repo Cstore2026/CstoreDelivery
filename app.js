@@ -470,6 +470,8 @@ async function logout() {
 }
 
 function bindEvents() {
+  console.log("loginButton:", $("loginButton"));
+
   $("themeToggle")?.addEventListener("click", toggleTheme);
   $("loginButton")?.addEventListener("click", login);
   $("logoutButton")?.addEventListener("click", logout);
@@ -504,5 +506,8 @@ onAuthStateChanged(auth, async (user) => {
   setLoginMessage("ok", "تم تسجيل الدخول بنجاح.");
 });
 
-initializeTheme();
-bindEvents();
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("APP LOADED - EVENTS BOUND");
+  initializeTheme();
+  bindEvents();
+});
