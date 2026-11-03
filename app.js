@@ -47,6 +47,27 @@ let editingPricing = false;
 let authEpoch = 0;
 
 function setMessage(type, message) { const n = $('messageBox'); n.className = `alert ${type}`; n.textContent = message; }
+function refreshCopyLocationButton() {
+  // Copy only the customer drop-off point, never a branch or map viewport center.
+  const btn = $('copyCustomerLocationButton');
+  btn.disabled = !customerCoords || !$('locationConfirmed').checked;
+}
+async function copyCustomerLocation() {
+  if (!customerCoords || !$('locationConfirmed').checked) {
+    setMessage('warn', 'حدد موقع التسليم وأكده مع العميل قبل نسخ اللوكيشن.');
+    return;
+  }
+  const link = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${customerCoords.lat.toFixed(7)},${customerCoords.lng.toFixed(7)}`)}`;
+  try {
+    await navigator.clipboard.writeText(link);
+    setMessage('ok', 'تم نسخ رابط موقع العميل. الصقه في واتساب أو أي رسالة للطيار.');
+  } catch (e) {
+    console.warn('Clipboard was not available:', e);
+    // If permission to use the clipboard is blocked, keep the link accessible.
+    window.prompt('النسخ التلقائي مش متاح؛ انسخ الرابط ده يدويًا:', link);
+    setMessage('warn', 'لو لم يتم النسخ تلقائيًا، انسخ رابط الموقع من النافذة التي ظهرت.');
+  }
+}
 function loginMessage(type, message) { const n = $('loginMessage'); n.className = `alert ${type}`; n.textContent = message; }
 function normalizeCoord(obj) {
   if (!obj) return null;
@@ -72,6 +93,7 @@ function resetResult(message = 'هنا هتشوف المسافة والتكلف�
 function invalidateCustomer() {
   customerCoords = null;
   $('locationConfirmed').checked = false;
+  refreshCopyLocationButton();
   $('addressReview').classList.add('hidden');
   if (customerMarker) { customerMarker.setMap(null); customerMarker = null; }
   $('mapLocationStatus').textContent = 'الخريطة تظهر بعد تحديد الموقع';
@@ -264,6 +286,7 @@ async function setCustomerLocation(coords,description,accuracy){
   $('addressAccuracy').textContent=accuracy||'العنوان تقريبي، أكد مكان التسليم مع العميل قبل الحساب.';
   $('addressReview').classList.remove('hidden');
   $('locationConfirmed').checked=false;
+  refreshCopyLocationButton();
   resetResult();
   setMessage('info','راجع الخريطة والمعالم مع العميل، ثم علّم تأكيد الموقع واضغط حساب.');
 }
@@ -483,7 +506,8 @@ function bind(){
   $('searchAddressButton').addEventListener('click',searchAddress);
   $('convertButton').addEventListener('click',convertLink);
   $('calculateButton').addEventListener('click',calculate);
-  $('locationConfirmed').addEventListener('change',()=>{resetResult();});
+  $('copyCustomerLocationButton').addEventListener('click',copyCustomerLocation);
+  $('locationConfirmed').addEventListener('change',()=>{refreshCopyLocationButton();resetResult();});
   for(const id of ['buildingNumber','streetName','areaName','landmark'])$(id).addEventListener('input',()=>{
     addressQuerySerial++;predictionsSerial++;invalidateCustomer();
     if(id==='streetName'||id==='areaName'){clearTimeout(autoCompleteTimeout);autoCompleteTimeout=setTimeout(autocomplete,500);}
