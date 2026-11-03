@@ -21,3 +21,56 @@ input{width:100%;padding:14px 16px;border:1.5px solid var(--border);border-radiu
 .admin-panel{display:none;margin-bottom:24px}.admin-panel.active{display:block}.login-overlay{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;background:rgba(17,6,13,.46);backdrop-filter:blur(8px);padding:18px}.login-box{width:min(100%,460px);background:var(--surface);border:1px solid var(--border);border-radius:30px;box-shadow:var(--shadow);padding:24px}.login-logo{width:110px;height:110px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 16px;background:#fff}.hidden{display:none!important}
 .loader{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,.45);border-top-color:currentColor;border-radius:50%;animation:spin .9s linear infinite;vertical-align:middle;margin-left:6px}.login-title{margin:0 0 10px;text-align:center}.login-subtitle{text-align:center;margin:0 0 18px}.section-space{margin-top:14px}.main-label{display:block;margin-bottom:8px;font-size:14px;color:var(--text);font-weight:700}.mt-12{margin-top:12px}.coords-big{font-size:24px}
 @keyframes spin{to{transform:rotate(360deg)}}@media (max-width:1080px){.grid,.right-grid,.summary-grid{grid-template-columns:1fr}.header{grid-template-columns:1fr}.header-actions{justify-content:flex-start}}@media (max-width:640px){.brand-wrap{align-items:flex-start}.brand-logo{width:74px;height:74px}.btn-row{flex-direction:column}.btn{width:100%}.coord-grid,.admin-grid{grid-template-columns:1fr}}
+
+/* v2 additions — intentionally reuse the ORIGINAL pink C Store tokens above. */
+button:disabled{opacity:.52;cursor:not-allowed;transform:none!important}
+select{width:100%;padding:14px 16px;border:1.5px solid var(--border);border-radius:18px;font-size:14px;color:var(--text);background:var(--input-bg);outline:none}
+input[type="checkbox"]{width:19px;height:19px;flex-shrink:0;accent-color:var(--primary);padding:0;box-shadow:none}
+.header .title-block .small{margin-top:3px}
+.section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.section-title h2,.section-title h3{margin:0}
+.section-title h3,.tariff-section h3{font-size:18px;margin:8px 0 12px}
+.admin-grid.triple{grid-template-columns:repeat(3,minmax(0,1fr))}
+.management-panel{margin-bottom:24px}
+.management-branches{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.branch-status-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--chip-bg);border:1px solid var(--border);border-radius:17px;padding:12px 16px}
+.branch-status-row .btn{min-width:105px}
+.search-card{margin-bottom:24px}
+.location-methods{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.manual-address-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.manual-address-grid .field{margin-bottom:4px}
+.confirmation-check{display:flex;align-items:center;gap:11px;margin-top:16px;padding:12px 16px;border:1px solid var(--border);border-radius:17px;background:var(--chip-bg);font-size:14px;font-weight:700;line-height:1.8;cursor:pointer}
+.address-review{padding:12px 16px;border:1px solid var(--border);border-radius:18px;background:var(--chip-bg);margin-top:14px}
+.address-review .alert{margin-top:8px}
+.address-suggestions{margin-top:12px;border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}
+.address-option{display:block;width:100%;background:var(--input-bg);color:var(--text);border:0;border-bottom:1px solid var(--border);text-align:right;padding:12px 16px;cursor:pointer;font-size:14px;line-height:1.7}
+.address-option:last-child{border-bottom:0}.address-option:hover{background:var(--chip-bg)}
+.map-result-layout{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(300px,1fr);gap:24px;margin-bottom:24px}
+.result-stack{display:grid;grid-template-rows:1fr 1fr;gap:24px}
+.result-stack .card{min-width:0}
+.customer-map{width:100%;height:425px;border-radius:20px;background:linear-gradient(135deg,#fee8f4,#f8e6f0);border:1px solid var(--border)}
+body.dark .customer-map{background:#392034}
+.map-hint{margin-top:12px}
+.map-card .section-title h2{margin-bottom:0}
+.table-scroll{width:100%;overflow-x:auto}
+.comparison-table{border-collapse:separate;border-spacing:0;width:100%;min-width:540px;text-align:right;font-size:15px}
+.comparison-table th{padding:15px 14px;background:var(--chip-bg);font-weight:800;border-bottom:1px solid var(--border)}
+.comparison-table td{padding:14px;border-bottom:1px solid var(--border);font-weight:600}
+.comparison-table .nearest{background:var(--chip-bg);color:var(--primary-dark)}
+.comparison-table .selected-route{outline:2px solid var(--primary);outline-offset:-3px}
+.comparison-table .unavailable{opacity:.58}
+.comparison-table tbody tr:not(.unavailable){cursor:pointer}
+.comparison-table tbody tr:not(.unavailable):hover{background:var(--accent)}
+.comparison-table tbody tr:focus{outline:2px solid var(--primary)}
+.two-pricing-columns{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:12px}
+.tariff-section{border:1px solid var(--border);border-radius:20px;padding:14px;background:var(--chip-bg)}
+.tariff-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.2fr) auto;gap:6px;align-items:center;margin-bottom:8px}
+.tariff-row input{min-width:0;padding:11px 8px;border-radius:12px}
+.tariff-row .btn{padding:11px 12px;border-radius:12px}
+.tariff-labels{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.2fr) auto;gap:6px;color:var(--text-soft);font-size:12px;font-weight:700;margin-bottom:8px}
+.tariff-labels span:last-child{min-width:48px}
+.danger{color:#a92e4d!important}
+.mode-field{max-width:500px}
+@media(max-width:1080px){.map-result-layout,.two-pricing-columns{grid-template-columns:1fr}.manual-address-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.result-stack{grid-template-columns:1fr 1fr;grid-template-rows:auto}}
+@media(max-width:740px){.admin-grid.triple,.management-branches,.result-stack{grid-template-columns:1fr}.manual-address-grid{grid-template-columns:1fr}.customer-map{height:315px}.header-actions{justify-content:flex-start}.section-title .btn{width:auto}}
+@media(max-width:480px){.tariff-row{grid-template-columns:1fr 1fr}.tariff-row .btn{width:100%}.tariff-labels{display:none}.header{padding:16px}.card{padding:16px}.title-block h1{font-size:24px}}

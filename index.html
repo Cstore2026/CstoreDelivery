@@ -3,146 +3,108 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>C STORE Delivery Dashboard</title>
+  <meta name="theme-color" content="#f02b8d" />
+  <title>C Store — حساب تكلفة التوصيل</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="page-watermark">
-    <img src="logo.jpg" alt="C Store watermark">
-  </div>
+  <div class="page-watermark"><img src="logo.jpg" alt=""></div>
 
   <div id="loginOverlay" class="login-overlay">
     <div class="login-box">
-      <img class="login-logo" src="logo.jpg" alt="C Store Logo">
+      <img class="login-logo" src="logo.jpg" alt="C Store">
       <h2 class="login-title">تسجيل الدخول</h2>
-      <p class="small login-subtitle">سجل الدخول بحساب Firebase الذي أنشأته داخل المشروع.</p>
-
-      <div class="field">
-        <label>البريد الإلكتروني</label>
-        <input id="emailInput" type="email" placeholder="admin@cstore.com أو view@cstore.com">
-      </div>
-
-      <div class="field">
-        <label>الباسورد</label>
-        <input id="passwordInput" type="password" placeholder="اكتب الباسورد">
-      </div>
-
-      <div class="btn-row">
-        <button class="btn primary" id="loginButton">دخول</button>
-      </div>
-
-      <div id="loginMessage" class="alert warn">استخدم الحسابات التي أنشأتها داخل Firebase Authentication.</div>
+      <p class="small login-subtitle">حساب الموظف أو مشرف الكول سنتر أو الأدمن</p>
+      <div class="field"><label for="emailInput">البريد الإلكتروني</label><input id="emailInput" type="email" autocomplete="username" placeholder="البريد الإلكتروني"></div>
+      <div class="field"><label for="passwordInput">كلمة المرور</label><input id="passwordInput" type="password" autocomplete="current-password" placeholder="كلمة المرور"></div>
+      <div class="btn-row"><button class="btn primary" id="loginButton" type="button">دخول</button></div>
+      <div id="loginMessage" class="alert info">استخدم حسابك المعتمد في Firebase.</div>
     </div>
   </div>
 
-  <div class="container">
-    <div class="header">
-      <div class="brand-wrap">
-        <img class="brand-logo" src="logo.jpg" alt="C Store Delivery Logo">
-        <div class="title-block">
-          <h1>لوحة إدارة خدمات التوصيل</h1>
-        </div>
-      </div>
+  <main class="container">
+    <header class="header">
+      <div class="brand-wrap"><img class="brand-logo" src="logo.jpg" alt="C Store Delivery Logo"><div class="title-block"><h1>لوحة إدارة خدمات التوصيل</h1><div class="small">حساب المسافة الفعلية وتكلفة التوصيل من كل فرع</div></div></div>
+      <div class="header-actions"><span id="userRoleBadge" class="pill">غير مسجل</span><span id="branchesCountBadge" class="pill">— فروع متاحة</span><button id="themeToggle" class="theme-toggle" type="button">🌙 Dark Mode</button><button class="btn secondary" id="logoutButton" type="button">تسجيل خروج</button></div>
+    </header>
 
-      <div class="header-actions">
-        <div id="userRoleBadge" class="pill">غير مسجل</div>
-        <div id="branchesCountBadge" class="pill">0 / 0 فروع</div>
-        <button id="themeToggle" class="theme-toggle" type="button">🌙 Dark Mode</button>
-        <button class="btn secondary" id="logoutButton" type="button">تسجيل خروج</button>
-      </div>
-    </div>
-
-    <div id="adminPanel" class="card admin-panel">
+    <section id="adminPanel" class="card admin-panel" aria-label="إدارة الأدمن">
       <h2>لوحة تحكم الأدمن</h2>
-      <div class="subtle-note">من هنا تقدر تعدل إحداثيات الفروع ونظام التسعير. التغييرات تتحفظ على Firebase وتظهر عند كل الناس.</div>
-
-      <div class="admin-form-list" id="adminBranchesForm"></div>
+      <p class="subtle-note">إدارة الفروع والتسعير من هنا فقط. الفرع الجديد يبدأ «غير مفعّل» و«مغلق».</p>
+      <div class="section-title"><h3>الفروع</h3><button class="btn secondary" type="button" id="normalizeOldBranchesButton">تهيئة الفروع القديمة</button></div>
+      <div id="adminBranchesForm" class="admin-form-list"></div>
+      <form id="addBranchForm" class="admin-item section-space">
+        <strong>إضافة فرع جديد</strong>
+        <div class="admin-grid triple">
+          <div class="field"><label for="newBranchName">اسم الفرع</label><input required id="newBranchName" placeholder="اسم الفرع"></div>
+          <div class="field"><label for="newBranchLat">خط العرض Latitude</label><input required id="newBranchLat" type="number" step="any" placeholder="30.000000"></div>
+          <div class="field"><label for="newBranchLng">خط الطول Longitude</label><input required id="newBranchLng" type="number" step="any" placeholder="31.000000"></div>
+        </div>
+        <button class="btn primary" type="submit">إضافة الفرع (مغلق وغير مفعّل)</button>
+      </form>
 
       <div class="admin-item section-space">
-        <div class="admin-head">
-          <strong>إعدادات التسعير</strong>
-          <span class="status">Admin</span>
+        <div class="section-title"><h3>إعدادات التسعير</h3><span class="status">Admin فقط</span></div>
+        <div class="field mode-field"><label for="pricingMode">نظام التسعير النشط</label><select id="pricingMode"><option value="cumulative">التسعير التراكمي</option><option value="perKmTier">إجمالي الكيلومترات × سعر الكيلو في الشريحة</option></select></div>
+        <p class="small">كل كسر في المسافة يُجبر لأعلى كيلومتر كامل قبل اختيار الشريحة. الأسعار نفسها لجميع الفروع.</p>
+        <div class="two-pricing-columns">
+          <section class="tariff-section"><h3>التسعير التراكمي</h3><p class="small">أول شريحة مبلغ ثابت؛ وبعدها كل شريحة تُحسب على الكيلومترات الإضافية فقط. اترك نهاية آخر شريحة فارغة إذا كانت مفتوحة.</p><div class="tariff-labels"><span>من كم</span><span>إلى كم</span><span>مبلغ ثابت / سعر كيلو</span><span>الإجراء</span></div><div id="cumulativeTierRows"></div><button class="btn secondary" id="addCumulativeTierButton" type="button">+ شريحة تراكمي</button></section>
+          <section class="tariff-section"><h3>سعر الكيلو حسب الشريحة</h3><p class="small">إجمالي الكيلومترات × سعر الكيلو في الشريحة المناسبة. لو المسافة خارج آخر شريحة، لا يظهر سعر.</p><div class="tariff-labels"><span>من كم</span><span>إلى كم</span><span>سعر الكيلو</span><span>الإجراء</span></div><div id="perKmTierRows"></div><button class="btn secondary" id="addPerKmTierButton" type="button">+ شريحة سعر كيلو</button></section>
         </div>
-        <div class="admin-grid">
-          <div class="field">
-            <label>سعر ثابت حتى (كم)</label>
-            <input id="price_tier1_km" type="number" step="0.1">
-          </div>
-          <div class="field">
-            <label>السعر الثابت</label>
-            <input id="price_tier1_cost" type="number" step="0.1">
-          </div>
-          <div class="field">
-            <label>حتى (كم) للشريحة الثانية</label>
-            <input id="price_tier2_km" type="number" step="0.1">
-          </div>
-          <div class="field">
-            <label>سعر الكيلو من بعد الشريحة الأولى</label>
-            <input id="price_tier2_rate" type="number" step="0.1">
-          </div>
-          <div class="field">
-            <label>سعر الكيلو بعد الشريحة الثانية</label>
-            <input id="price_tier3_rate" type="number" step="0.1">
-          </div>
-        </div>
+        <div class="btn-row"><button class="btn primary" id="savePricingButton" type="button">حفظ نظام التسعير</button></div>
+        <p class="small">تغيير كلمة مرور الحسابات وإنشاء حساب المشرف يتمان من Firebase Authentication Console.</p>
+      </div>
+    </section>
 
-        <div class="small">
-          تغيير باسوردات المستخدمين يتم من Firebase Authentication Console، وليس من داخل الموقع.
-        </div>
+    <section id="supervisorPanel" class="card management-panel hidden" aria-label="إدارة فتح وقفل الفروع">
+      <h2>التحكم في فتح وقفل الفروع</h2>
+      <p class="subtle-note">فتح وقفل الفروع يدوي فقط. الفرع الجديد لا يمكن فتحه إلا بعد ما الأدمن يفعّله لأول مرة.</p>
+      <div id="supervisorBranches" class="management-branches"></div>
+    </section>
 
-        <div class="btn-row">
-          <button class="btn primary" id="saveAdminButton" type="button">حفظ التعديلات</button>
-          <button class="btn secondary" id="reloadDataButton" type="button">إعادة تحميل البيانات</button>
+    <section class="card search-card">
+      <h2>تحديد موقع العميل</h2>
+      <div class="location-methods" role="group" aria-label="طريقة تحديد الموقع">
+        <button class="btn primary" id="addressMethodButton" type="button" aria-pressed="true">العنوان المكتوب</button>
+        <button class="btn secondary" id="linkMethodButton" type="button" aria-pressed="false">رابط Google Maps أو إحداثيات</button>
+      </div>
+      <div id="addressPanel">
+        <div class="manual-address-grid">
+          <div class="field"><label for="buildingNumber">رقم العمارة</label><input id="buildingNumber" autocomplete="off" placeholder="مثال: 12"></div>
+          <div class="field"><label for="streetName">اسم الشارع</label><input id="streetName" autocomplete="off" placeholder="مثال: عباس العقاد"></div>
+          <div class="field"><label for="areaName">المنطقة</label><input id="areaName" autocomplete="off" placeholder="مثال: مدينة نصر"></div>
+          <div class="field"><label for="landmark">أقرب معلم معروف</label><input id="landmark" autocomplete="off" placeholder="مثال: بجوار السوبرماركت"></div>
+        </div>
+        <div id="streetSuggestions" class="address-suggestions hidden" aria-live="polite"></div>
+        <div class="btn-row"><button id="searchAddressButton" class="btn secondary" type="button">بحث عن العنوان على الخريطة</button></div>
+        <div id="addressMatches" class="address-suggestions hidden" aria-live="polite"></div>
+        <div id="addressReview" class="address-review hidden">
+          <strong>مراجعة موقع التسليم</strong>
+          <p id="matchedAddress" class="small"></p>
+          <div id="addressAccuracy" class="alert warn"></div>
         </div>
       </div>
-    </div>
-
-    <div id="mainGrid" class="grid">
-      <div id="branchesCard" class="card">
-        <h2 id="branchesTitle">الفروع</h2>
-        <div id="branchesNote" class="subtle-note">الفروع ثابتة.</div>
-        <div id="branchesContainer" class="branches"></div>
+      <div id="linkPanel" class="hidden">
+        <label class="main-label" for="customerLocation">رابط Google Maps كامل أو إحداثيات latitude,longitude</label>
+        <input id="customerLocation" dir="auto" placeholder="رابط Google Maps أو 30.04822252,31.39434674">
+        <p class="small">الروابط المختصرة مثل maps.app.goo.gl قد تحتاج فتحها ونسخ الرابط الكامل أو الإحداثيات.</p>
+        <button id="convertButton" class="btn secondary" type="button">استخراج الموقع</button>
       </div>
+      <label class="confirmation-check"><input id="locationConfirmed" type="checkbox"> <span>أكد العميل أن الموقع الظاهر على الخريطة هو مكان تسليم الأوردر.</span></label>
+      <div class="btn-row"><button class="btn primary" id="calculateButton" type="button">احسب مسافة الطريق والتوصيل لكل الفروع</button></div>
+      <div id="messageBox" class="alert info">حدد موقع العميل، راجعه على الخريطة، وأكد الموقع قبل الحساب.</div>
+    </section>
 
-      <div class="right-grid">
-        <div class="card full">
-          <h2>لوكيشن العميل</h2>
-          <label class="main-label" for="customerLocation">الصق رابط العميل أو الإحداثيات</label>
-          <input id="customerLocation" placeholder="مثال: 30.04822252,31.39434674 أو رابط Google Maps كامل" />
-
-          <div class="btn-row">
-            <button class="btn secondary" id="convertButton" type="button">تحويل الرابط إلى إحداثيات</button>
-            <button class="btn secondary" id="useExtractedButton" type="button">استخدام الإحداثيات المستخرجة</button>
-            <button class="btn secondary" id="useExampleButton" type="button">تجربة مثال جاهز</button>
-            <button class="btn primary" id="calculateButton" type="button">احسب مسافة الطريق</button>
-          </div>
-
-          <div id="messageBox" class="alert warn">ضع لوكيشن العميل، وبعدها اضغط "احسب مسافة الطريق".</div>
-
-          <div id="extractedCoordsBox" class="result-box hidden mt-12">
-            <div class="muted">الإحداثيات المستخرجة</div>
-            <div id="extractedCoordsText" class="big coords-big"></div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2>المسافة</h2>
-          <div id="distanceContent" class="muted">بعد الحساب سيظهر أقرب فرع ومسافة الطريق الفعلية.</div>
-        </div>
-
-        <div class="card">
-          <h2>تكلفة التوصيل</h2>
-          <div id="costContent" class="muted">بعد الحساب ستظهر تكلفة التوصيل حسب مسافة الطريق.</div>
-        </div>
+    <section class="map-result-layout">
+      <div class="card map-card"><div class="section-title"><h2>خريطة العميل والطريق</h2><span id="mapLocationStatus" class="small">الخريطة تظهر بعد تحديد الموقع</span></div><div id="customerMap" class="customer-map"></div><div class="btn-row"><button class="btn secondary" type="button" id="copyCustomerLocationButton" disabled title="أكد موقع تسليم العميل على الخريطة أولًا">📋 نسخ لوكيشن العميل</button></div><div class="small map-hint">العلامات وأسماء الشوارع والمعالم الظاهرة من Google للمساعدة في تأكيد العنوان مع العميل. اضغط على أي فرع في المقارنة لعرض طريقه.</div></div>
+      <div class="result-stack">
+        <div class="card"><h2>أقرب فرع متاح</h2><div id="distanceContent" class="muted">بعد الحساب سيظهر أقرب فرع مفتوح ومسافة الطريق الفعلية.</div></div>
+        <div class="card"><h2>تكلفة التوصيل</h2><div id="costContent" class="muted">بعد التأكيد والحساب ستظهر تكلفة التوصيل.</div></div>
       </div>
-    </div>
+    </section>
 
-    <div class="card">
-      <h2>تفاصيل كل الفروع</h2>
-      <div id="allBranchesResults" class="muted">ستظهر مقارنة مسافات الطريق لكل الفروع هنا بعد الحساب.</div>
-    </div>
-  </div>
-
+    <section class="card compare-card"><h2>جميع الفروع — المسافة والتكلفة</h2><div id="allBranchesResults" class="muted">هنا هتشوف المسافة والتكلفة من كل فرع بعد البحث.</div></section>
+  </main>
   <script type="module" src="app.js"></script>
 </body>
 </html>
